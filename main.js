@@ -83,9 +83,12 @@ function startNotifications(characteristic) {
     log('Starting notifications...');
   
     return characteristic.startNotifications().
-        then(() => {
-          log('Notifications started');
-        });
+      then(() => {
+        log('Notifications started');
+        // Added line
+        characteristic.addEventListener('characteristicvaluechanged',
+            handleCharacteristicValueChanged);
+      });
   }
 
 // Output to terminal
@@ -93,13 +96,83 @@ function log(data, type = '') {
     terminalContainer.insertAdjacentHTML('beforeend',
         '<div' + (type ? ' class="' + type + '"' : '') + '>' + data + '</div>');
   }
-  
+
 // Disconnect from the connected device
 function disconnect() {
-  //
+  if (deviceCache) {
+    log('Disconnecting from "' + deviceCache.name + '" bluetooth device...');
+    deviceCache.removeEventListener('gattserverdisconnected',
+        handleDisconnection);
+
+    if (deviceCache.gatt.connected) {
+      deviceCache.gatt.disconnect();
+      log('"' + deviceCache.name + '" bluetooth device disconnected');
+    }
+    else {
+      log('"' + deviceCache.name +
+          '" bluetooth device is already disconnected');
+    }
+  }
+
+  // Added condition
+  if (characteristicCache) {
+    characteristicCache.removeEventListener('characteristicvaluechanged',
+        handleCharacteristicValueChanged);
+    characteristicCache = null;
+  }
+
+  deviceCache = null;
+}
+// Intermediate buffer for incoming data
+let readBuffer = '';
+
+// Data receiving
+function handleCharacteristicValueChanged(event) {
+  let value = new TextDecoder().decode(event.target.value);
+
+  for (let c of value) {
+    if (c === '\n') {
+      let data = readBuffer.trim();
+      readBuffer = '';
+
+      if (data) {
+        receive(data);
+      }
+    }
+    else {
+      readBuffer += c;
+    }
+  }
 }
 
-// Send data to the connected device
-function send(data) {
-  //
+// Received data handling
+function receive(data) {
+  log(data, 'in');
 }
+
+function send(data) {
+    data = String(data);
+  
+    if (!data || !characteristicCache) {
+      return;
+    }
+  
+    data += '\n';
+  
+    if (data.length > 20) {
+      let chunks = data.match(/(.|[\r\n]){1,20}/g);
+  
+      writeToCharacteristic(characteristicCache, chunks[0]);
+  
+      for (let i = 1; i < chunks.length; i++) {
+        setTimeout(() => {
+          writeToCharacteristic(characteristicCache, chunks[i]);
+        }, i * 100);
+      }
+    }
+    else {
+      writeToCharacteristic(characteristicCache, data);
+    }
+  
+    log(data, 'out');
+  }
