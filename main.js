@@ -152,7 +152,7 @@ if(cacheDispositivo){
   mostrar('Desconectando de "'+ cacheDispositivo.name + '"');
   cacheDispositivo.removeEventListener('gattserverdisconnected',manejadorDesconexion);
   if(cacheDispositivo.gatt.connected){
-    cacheDispositivo.gatt.desconectar();
+    cacheDispositivo.gatt.disconnect();
     mostrar('"'+cacheDispositivo.name+'" dispositivo desconectado');
   }
   else{
