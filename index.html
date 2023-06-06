@@ -7,19 +7,19 @@
 </head>
 <body>
 
-<button id="connect" type="button">Connect</button>
+<button id="btnConexion" type="button">Conexión a Bluetooth</button>
 
-<button id="disconnect" type="button">Disconnect</button>
+<button id="btnDesconexion" type="button">desconexión de Bluetooth</button>
 
 <div id="terminal">
-    <div>Device connection...</div>
-    <div class="out">Outcoming message</div>
-    <div class="in">Incoming message</div>
+    <div>Dispositivo en conexión...</div>
+    <div class="saliente">Mensaje/s salientes</div>
+    <div class="entrante">Mensaje/s entrantes</div>
 </div>
 
-<form id="send-form">
-    <input id="input" type="text">
-    <button type="submit">Send</button>
+<form id="formulario">
+    <input id="comandos" type="text">
+    <button type="submit">Enviar</button>
 </form>
 
 <script src="main.js"></script>
