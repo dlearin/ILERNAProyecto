@@ -45,7 +45,7 @@ function connectar() {
 //lanzamos la promesa y se resuelve de ser not null cacheDispotivo
   return (cacheDispositivo ? Promise.resolve(cacheDispositivo) : 
 //en caso de ser nulo, lanzamos la función solicitarDispositivoBT()
-  solicitarDispotivoBt()).
+solicitarDispositivoBt()).
   then(dispositivo => conectarDispositivoYAlmacenarCaracteristica(dispositivo)).
   then(caracteristicas => inicioNotificaciones(caracteristicas)).
   catch(error => mostrar(error));
@@ -60,19 +60,17 @@ function connectar() {
    * que describe qué tipo de dispositivos Bluetooth estamos buscando.
    */
 
-function solicitarDispotivoBt() {
+function solicitarDispositivoBt() {
 
 mostrar('Requesting bluetooth device...');
 
 return navigator.bluetooth.requestDevice({
-
-  filters: [{servicio: [0xFFE0]}],
-
+  filters: [{services: [0xFFE0]}],
 }).
-then(
-
-  dispositivo => {mostrar('"' + dispositivo.name + '" dispositivo BT seleccionado');
+then(dispositivo => {
+  mostrar('"' + dispositivo.name + '" dispositivo BT seleccionado');
   cacheDispositivo = dispositivo;
+  
   return cacheDispositivo;
 
 });
