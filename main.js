@@ -177,7 +177,7 @@ cacheDispositivo = null;
 function manejadorCambioValorCaracteristicas(event){
 // lo primero es crear un objeto textdecoder o interfa api de codificacion que proporciona decodificacion de texto desde un flujo de bytes.
   let valor = new TextDecoder().decode(event.target.value); //cnvertirmos el flujo de bytes en string de texto
-mostrar(valor, 'in');
+mostrar(valor, 'entrante');
 
 }
 
@@ -197,7 +197,7 @@ function enviar(datos) {
   }
 
   escribeEnCaracteristicas(caracteristicasCache, datos);
-  mostrar(datos,'out');
+  mostrar(datos,'saliente');
 
 }
 
