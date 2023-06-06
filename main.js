@@ -66,7 +66,7 @@ mostrar('Requesting bluetooth device...');
 
 return navigator.bluetooth.requestDevice({
 
-  filters: [{service: [0xFFE0]}],
+  filters: [{services: [0xFFE0]}],
 
 }).
 then(
