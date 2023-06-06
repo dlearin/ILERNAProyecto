@@ -71,9 +71,28 @@ then(dispositivo => {
   mostrar('"' + dispositivo.name + '" dispositivo BT seleccionado');
   cacheDispositivo = dispositivo;
   
+  //linea añadida para la reconexion
+
+  cacheDispositivo.addEventListener('gattserverdisconnected',
+    manejadorDesconexion);
+
+// retornamos el cacheDispositivo
   return cacheDispositivo;
 
 });
+
+}
+
+function manejadorDesconexion(event){
+
+let dispositivo = event.target;
+
+mostrar('"' + dispositivo.name +
+        '" El dispositivo Bt se ha desconectado, intentando reconectar...');
+
+conectarDispositivoYAlmacenarCaracteristica(dispositivo).
+then(caracteristicas => inicioNotificaciones(caracteristicas)).
+catch(error=>log(error));
 
 }
 
@@ -129,7 +148,22 @@ function mostrar(data, type = '') {
 
 // Desconectamos del dispositivo
 function desconectar() {
-  //
+if(cacheDispositivo){
+  mostrar('Desconectando de "'+ cacheDispositivo.name + '"');
+  cacheDispositivo.removeEventListener('gattserverdisconnected',manejadorDesconexion);
+  if(cacheDispositivo.gatt.connected){
+    cacheDispositivo.gatt.desconectar();
+    mostrar('"'+cacheDispositivo.name+'" dispositivo desconectado');
+  }
+  else{
+    mostrar('"' + cacheDispositivo.name + '" el dispositivo ya esta desconectado');
+
+  }
+}
+
+caracteristicasCache = null;
+cacheDispositivo = null;
+
 }
 
 // Funcion para enviar datos
