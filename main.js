@@ -113,7 +113,7 @@ function conectarDispositivoYAlmacenarCaracteristica(dispositivo) {
 function inicioNotificaciones(caracteristicas) {
   mostrar('Starting notifications...');
 
-  return caracteristicas.inicioNotificaciones().
+  return caracteristicas.startNotifications()().
   then(() =>{
     mostrar('Notificaciones iniciadas');
   });
