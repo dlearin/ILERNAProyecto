@@ -111,9 +111,9 @@ function conectarDispositivoYAlmacenarCaracteristica(dispositivo) {
 
 // Habilitar la notificación de cambios en la característica
 function inicioNotificaciones(caracteristicas) {
-  mostrar('Starting notifications...');
+  mostrar('Iniciando notificaciones...');
 
-  return caracteristicas.startNotifications()().
+  return caracteristicas.startNotifications().
   then(() =>{
     mostrar('Notificaciones iniciadas');
   });
