@@ -2,10 +2,10 @@
     color: gray;
 }
 
-#terminal div.out {
+#terminal div.saliente {
     color: red;
 }
 
-#terminal div.in {
+#terminal div.entrante {
     color: blue;
 }

@@ -1,178 +1,138 @@
-// Get references to UI elements
-let connectButton = document.getElementById('connect');
-let disconnectButton = document.getElementById('disconnect');
+// Obtenemos las referencias a los elementos de la pagina
+
+let botonConexion = document.getElementById('btnConexion');
+let botonDesconexion = document.getElementById('btnDesconexion');
 let terminalContainer = document.getElementById('terminal');
-let sendForm = document.getElementById('send-form');
-let inputField = document.getElementById('input');
+let formulario = document.getElementById('formulario');
+let campoInput = document.getElementById('comandos');
+let cacheDispositivo = null; // inicializamos el cache del dispositivo BT en null por defecto
 
-// Selected device object cache
-let deviceCache = null;
+// Conectamos el dispositivo al pulsar sobre conectar
 
-// Connect to the device on Connect button click
-connectButton.addEventListener('click', function() {
-  connect();
+botonConexion.addEventListener('click', function() {
+  connectar();
 });
 
-// Disconnect from the device on Disconnect button click
-disconnectButton.addEventListener('click', function() {
-  disconnect();
+// desconectamos el dispositivo al pulsar sobre conectar
+
+botonDesconexion.addEventListener('click', function() {
+  desconectar();
 });
 
-// Handle form submit event
-sendForm.addEventListener('submit', function(event) {
-  event.preventDefault(); // Prevent form sending
-  send(inputField.value); // Send text field contents
-  inputField.value = '';  // Zero text field
-  inputField.focus();     // Focus on text field
+// Gestionamos el evento del formulario
+
+formulario.addEventListener('submit', function(event) {
+  event.preventDefault(); // Lo primero, prevenimos el envio por defecto del formulario
+  enviar(campoInput.value); // Enviamos el contenido del formulario, por medio de enviar un parametro a la función enviar
+  campoInput.value = '';  // Inicializamos el campo con valor el blanco
+  campoInput.focus();     // Focus en el campo de texto
 });
 
-// Launch Bluetooth device chooser and connect to the selected
-function connect() {
-    return (deviceCache ? Promise.resolve(deviceCache) : requestBluetoothDevice()).
-        then(device => connectDeviceAndCacheCharacteristic(device)).
-        then(characteristic => startNotifications(characteristic)).
-        catch(error => log(error));}
+/**
+ * Crearemos una función que contenga promises, esto se debe a que dado que la conexión
+ * BT - dispositvo puede demorarse, no se realizará de forma sincronica sino asincrona
+ * En caso de crear funciones estandar, desenvocaría en errores por no realizarse
+ * en tiempo sincrono.
+ */
 
-// Function requestBt device
-function requestBluetoothDevice() {
-    log('Requesting bluetooth device...');
+// Funcion para lanzar servicio BT y conexion
 
-    return navigator.bluetooth.requestDevice({
-      filters: [{services: [0xFFE0]}],
-    }).
-        then(device => {
-          log('"' + device.name + '" bluetooth device selected');
-          deviceCache = device;
-  
-          return deviceCache;
-        });
+function connectar() {
+  /**en caso de que ya tengamos el dispotivo guardado en nuestro cache, resolvemos true, 
+   * en caso contrario llamamos a la funcion solicitarDispotivoBt
+  *
+  */
+//lanzamos la promesa y se resuelve de ser not null cacheDispotivo
+  return (cacheDispositivo ? Promise.resolve(cacheDispositivo) : 
+//en caso de ser nulo, lanzamos la función solicitarDispositivoBT()
+  solicitarDispotivoBt()).
+  then(dispositivo => conectarDispositivoYAlmacenarCaracteristica(dispositivo)).
+  then(caracteristicas => inicioNotificaciones(caracteristicas)).
+  catch(error => mostrar(error));
+
 }
 
-// Characteristic object cache
-let characteristicCache = null;
+//funcion para solicitar la vinculacion al BT por medio de  Web Bluetooth API 
+  /**
+   * De cara a usar la API Web Bluetooth para solicitar un dispositivo, 
+   * necesitamos emplear navigator.bluetooth.requestDevice()
+   * Esta función toma un objeto de configuración como argumento, 
+   * que describe qué tipo de dispositivos Bluetooth estamos buscando.
+   */
 
-// Connect to the device specified, get service and characteristic
-function connectDeviceAndCacheCharacteristic(device) {
-    if (device.gatt.connected && characteristicCache) {
-        return Promise.resolve(characteristicCache);
-      }
-    
-      log('Connecting to GATT server...');
-    
-      return device.gatt.connect().
-          then(server => {
-            log('GATT server connected, getting service...');
-    
-            return server.getPrimaryService(0xFFE0);
-          }).
-          then(service => {
-            log('Service found, getting characteristic...');
-    
-            return service.getCharacteristic(0xFFE1);
-          }).
-          then(characteristic => {
-            log('Characteristic found');
-            characteristicCache = characteristic;
-    
-            return characteristicCache;
-          });
+function solicitarDispotivoBt() {
+
+mostrar('Requesting bluetooth device...');
+
+return navigator.bluetooth.requestDevice({
+
+  filters: [{service: [0xFFE0]}],
+
+}).
+then(
+
+  dispositivo => {mostrar('"' + dispositivo.name + '" dispositivo BT seleccionado');
+  cacheDispositivo = dispositivo;
+  return cacheDispositivo;
+
+});
+
 }
 
-// Enable the characteristic changes notification
-function startNotifications(characteristic) {
-    log('Starting notifications...');
+//cache de las caracteristicas del dispotivo
+
+let carateristicasCache = null;
+
+// Conectar al dispositivo especificado, obtener el servicio y la característica
+function conectarDispositivoYAlmacenarCaracteristica(dispositivo) {
+
+  if(dispositivo.gatt.connected && carateristicasCache){
+
+    return Promise.resolve(carateristicasCache);
+  }
+
+  mostrar('Conectando al servicio GATT....');
+
+  return dispositivo.gatt.connect().
+  then(servidor =>{
+    mostrar('GATT server conectado, obteniendo servicio...')
+    return servidor.getPrimaryService(0xFFE0);
+
+  }).
+  then(servicio => {
+    mostrar('Servicio encontrado, obteniendo caracteristicas....');
+    return servicio.getCharacteristic(0xFFE1);
+
+  }).
+  then(caracteristicas =>{
+    mostrar('Caracteristicas encontradas');
+    carateristicasCache = caracteristicas;
+  });
   
-    return characteristic.startNotifications().
-      then(() => {
-        log('Notifications started');
-        // Added line
-        characteristic.addEventListener('characteristicvaluechanged',
-            handleCharacteristicValueChanged);
-      });
-  }
-
-// Output to terminal
-function log(data, type = '') {
-    terminalContainer.insertAdjacentHTML('beforeend',
-        '<div' + (type ? ' class="' + type + '"' : '') + '>' + data + '</div>');
-  }
-
-// Disconnect from the connected device
-function disconnect() {
-  if (deviceCache) {
-    log('Disconnecting from "' + deviceCache.name + '" bluetooth device...');
-    deviceCache.removeEventListener('gattserverdisconnected',
-        handleDisconnection);
-
-    if (deviceCache.gatt.connected) {
-      deviceCache.gatt.disconnect();
-      log('"' + deviceCache.name + '" bluetooth device disconnected');
-    }
-    else {
-      log('"' + deviceCache.name +
-          '" bluetooth device is already disconnected');
-    }
-  }
-
-  // Added condition
-  if (characteristicCache) {
-    characteristicCache.removeEventListener('characteristicvaluechanged',
-        handleCharacteristicValueChanged);
-    characteristicCache = null;
-  }
-
-  deviceCache = null;
-}
-// Intermediate buffer for incoming data
-let readBuffer = '';
-
-// Data receiving
-function handleCharacteristicValueChanged(event) {
-  let value = new TextDecoder().decode(event.target.value);
-
-  for (let c of value) {
-    if (c === '\n') {
-      let data = readBuffer.trim();
-      readBuffer = '';
-
-      if (data) {
-        receive(data);
-      }
-    }
-    else {
-      readBuffer += c;
-    }
-  }
 }
 
-// Received data handling
-function receive(data) {
-  log(data, 'in');
+// Habilitar la notificación de cambios en la característica
+function inicioNotificaciones(caracteristicas) {
+  mostrar('Starting notifications...');
+
+  return caracteristicas.inicioNotificaciones().
+  then(() =>{
+    mostrar('Notificaciones iniciadas');
+  });
 }
 
-function send(data) {
-    data = String(data);
-  
-    if (!data || !characteristicCache) {
-      return;
-    }
-  
-    data += '\n';
-  
-    if (data.length > 20) {
-      let chunks = data.match(/(.|[\r\n]){1,20}/g);
-  
-      writeToCharacteristic(characteristicCache, chunks[0]);
-  
-      for (let i = 1; i < chunks.length; i++) {
-        setTimeout(() => {
-          writeToCharacteristic(characteristicCache, chunks[i]);
-        }, i * 100);
-      }
-    }
-    else {
-      writeToCharacteristic(characteristicCache, data);
-    }
-  
-    log(data, 'out');
-  }
+// Salida al terminal, especifico type como valor en blanco para diferente tratamiento de colo posterior según el color
+function mostrar(data, type = '') {
+  terminal.insertAdjacentHTML('beforeend',
+      '<div' + (type ? ' class="' + type + '"' : '') + '>' + data + '</div>');
+}
+
+// Desconectamos del dispositivo
+function desconectar() {
+  //
+}
+
+// Funcion para enviar datos
+function enviar(data) {
+  //
+}
