@@ -182,6 +182,25 @@ mostrar(valor, 'in');
 }
 
 // Funcion para enviar datos
-function enviar(data) {
-  //
+/**
+ * 
+ * Para enviar data unicamente necesitamos usar el metodo writeValue() del objeto 
+ * con arraybuffer como argumento. para convertir
+ * arraybuffer de string a arraybuffer usaremos texteconder
+ */
+function enviar(datos) {
+
+  datos = String(datos);
+
+  if(!datos || !caracteristicasCache){
+    return;
+  }
+
+  escribeEnCaracteristicas(caracteristicasCache, datos);
+  mostrar(datos,'out');
+
+}
+
+function escribeEnCaracteristicas(caracteristicas, data){
+  caracteristicas.writeValue(new TextEncoder().encode(datos));
 }
