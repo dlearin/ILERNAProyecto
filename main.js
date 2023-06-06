@@ -79,14 +79,14 @@ then(dispositivo => {
 
 //cache de las caracteristicas del dispotivo
 
-let carateristicasCache = null;
+let caracteristicasCache = null;
 
 // Conectar al dispositivo especificado, obtener el servicio y la característica
 function conectarDispositivoYAlmacenarCaracteristica(dispositivo) {
 
-  if(dispositivo.gatt.connected && carateristicasCache){
+  if(dispositivo.gatt.connected && caracteristicasCache){
 
-    return Promise.resolve(carateristicasCache);
+    return Promise.resolve(caracteristicasCache);
   }
 
   mostrar('Conectando al servicio GATT....');
@@ -104,7 +104,8 @@ function conectarDispositivoYAlmacenarCaracteristica(dispositivo) {
   }).
   then(caracteristicas =>{
     mostrar('Caracteristicas encontradas');
-    carateristicasCache = caracteristicas;
+    caracteristicasCache = caracteristicas;
+    mostrar(caracteristicasCache);
   });
   
 }
