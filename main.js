@@ -106,6 +106,7 @@ function conectarDispositivoYAlmacenarCaracteristica(dispositivo) {
     mostrar('Caracteristicas encontradas');
     caracteristicasCache = caracteristicas;
     mostrar(caracteristicasCache);
+    return caracteristicasCache;
   });
   
 }
