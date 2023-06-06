@@ -201,6 +201,6 @@ function enviar(datos) {
 
 }
 
-function escribeEnCaracteristicas(caracteristicas, data){
+function escribeEnCaracteristicas(caracteristicas, datos){
   caracteristicas.writeValue(new TextEncoder().encode(datos));
 }
