@@ -137,6 +137,8 @@ function inicioNotificaciones(caracteristicas) {
   return caracteristicas.startNotifications().
   then(() =>{
     mostrar('Notificaciones iniciadas');
+    //insertamos un evenlistener a caracteristicas para notificar cuando esta cambie
+    caracteristicas.addEventListener('characteristicvaluechanged', manejadorCambioValorCaracteristicas);
   });
 }
 
@@ -161,8 +163,21 @@ if(cacheDispositivo){
   }
 }
 
+if(caracteristicasCache){
+
+  caracteristicasCache.removeEventListener('characteristicvaluechanged',manejadorCambioValorCaracteristicas);
 caracteristicasCache = null;
+}
+
 cacheDispositivo = null;
+
+}
+
+// funcion espeficia para la recepcion de datos
+function manejadorCambioValorCaracteristicas(event){
+// lo primero es crear un objeto textdecoder o interfa api de codificacion que proporciona decodificacion de texto desde un flujo de bytes.
+  let valor = new TextDecoder().decode(event.target.value); //cnvertirmos el flujo de bytes en string de texto
+mostrar(valor, 'in');
 
 }
 
