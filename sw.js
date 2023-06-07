@@ -1,7 +1,7 @@
-importScripts('script/sw-toolbox.js');
+importScripts('sw-toolbox.js');
 
 toolbox.precache([
-  'script/companion.js',
+  'companion.js',
   'index.html',
   'script/main.js',
   'styles.css',
