@@ -5,7 +5,7 @@ $nombre_dispotivo = "arduino";
 $led_estatus = "ON";
 $tiempoSuceso = date('Y-m-d H:i:s'); 
 
-$sql = "INSERT INTO led_data (device_name, timestamp, led_status) VALUES ('$nombre_dispotivo', '$led_estatus', '$tiempoSuceso')";
+$sql = "INSERT INTO datos_led (nombre_dispositivo, tiempo, estatus_led) VALUES ('$nombre_dispotivo', '$led_estatus', '$tiempoSuceso')";
 
 if ($conn->query($sql) === TRUE) {
   echo "Se ha creado un nuevo registro";
