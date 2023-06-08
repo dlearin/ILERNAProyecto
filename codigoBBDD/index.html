@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="styles.css" rel="stylesheet">
+    <!--Opciones de icono-->
+    <link rel="apple-touch-icon" sizes="180x180" href="./imagenes/icono/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./imagenes/icono/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./imagenes/icono/favicon-16x16.png">
+    <link rel="manifest" href="./imagenes/icono/site.webmanifest">
+    <link rel="mask-icon" href="./imagenes/icono/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <!--Fin opciones de icono-->
+</head>
+<body>
+    <!--Grid container-->
+
+<div class="grid-container">
+
+    <div class="header">
+        <!--Header-->
+    <button id="btnConexion" type="button"> 
+        <img src="./imagenes/iconosFuncion/bton.png" alt="Conexión a Bluetooth">
+    </button>
+
+    <button id="btnDesconexion" type="button">
+        <img src="./imagenes/iconosFuncion/off.png" alt="Descoxión a Bluetooth">
+    </button>
+    </div>
+
+<!--Fin header-->
+    <div class="central">
+
+        <div id="terminal">
+            <div>Dispositivo en conexión...</div>
+            <div class="saliente">Mensaje/s salientes</div>
+            <div class="entrante">Mensaje/s entrantes</div>
+        </div>
+    </div>
+
+    <div class="inferior">
+
+        <form id="formulario">
+            <input id="comandos" type="text">
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+<!--Scripts js-->
+
+<script src="./scripts/main.js"></script>
+
+<!--Script para service worker-->
+<script src="companion.js" data-service-worker="sw-toolbox.js"></script>
+
+<!--Fin scripts-->
+</div>
+
+</body>
+</html>

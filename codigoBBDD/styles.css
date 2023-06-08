@@ -1,0 +1,50 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+#terminal div {
+    color: gray;
+}
+
+#terminal div.saliente {
+    color: red;
+}
+
+#terminal div.entrante {
+    color: blue;
+}
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr auto;
+    height: 100vh;
+}
+
+.header {
+    grid-column: 1 / -1; /* Esto hace que el encabezado se extienda por todas las columnas */
+    background-color:#ffffff;
+    padding: 20px;
+    text-align: right;
+    border-bottom: 1px solid gray;
+}
+
+.header button img {
+    width: 32px;
+    height: 32px;
+}
+
+.central {
+    grid-column: 1 / -1;
+    background-color: rgba(0, 0, 0, 0);
+    padding: 20px;
+    overflow: auto;
+    border-bottom: 1px solid gray;
+
+}
+
+.inferior {
+    grid-column: 1 / -1;
+    background-color: #ede;
+    padding: 20px;
+}
