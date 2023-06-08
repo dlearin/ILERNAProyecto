@@ -204,28 +204,28 @@ function enviar(datos) {
 
   switch(datos.toLowerCase()) {
     case "on led blanco":
-      url = "./BBDD/ledBlanco/led_on.php";
+      url = "http://localhost/Codigo/BBDD/ledBlanco/led_on.php";
       break;
     case "off led blanco":
-      url = "./BBDD/ledBlanco/led_off.php";
+      url = "http://localhost/Codigo/BBDD/ledBlanco/led_off.php";
       break;
     case "on led amarillo":
-      url = "./BBDD/ledAmarillo/led_on.php";
+      url = "http://localhost/Codigo/BBDD/ledAmarillo/led_on.php";
       break;
     case "off led amarillo":
-      url = "./BBDD/ledAmarillo/led_off.php";
+      url = "http://localhost/Codigo/BBDD/ledAmarillo/led_off.php";
       break;
     case "on led rojo":
-      url = "./BBDD/ledrojo/led_on.php";
+      url = "http://localhost/Codigo/BBDD/ledrojo/led_on.php";
       break;
     case "off led rojo":
-      url = "./BBDD/ledrojo/led_off.php";
+      url = "http://localhost/Codigo/BBDD/ledrojo/led_off.php";
       break;
     case "on motor":
-      url = "./BBDD/motor/motor_on.php";
+      url = "http://localhost/Codigo/BBDD/motor/motor_on.php";
       break;
     case "off motor":
-      url = "./BBDD/motor/motor_off.php";
+      url = "http://localhost/Codigo/BBDD/motor/motor_off.php";
       break;
   }
 
@@ -235,7 +235,7 @@ function enviar(datos) {
       if(!response.ok) {
         throw new Error("Error en la respuesta HTTP a: "+datos.toLowerCase+"con un error: " + response.status);
       } else {
-        return fetch("./BBDD/conexionArduino/conexion_arduino.php");//se envia la segunda peticion para escribir que se haconectado a arduino
+        return fetch("http://localhost/Codigo/BBDD/conexionArduino/conexion_arduino.php");//se envia la segunda peticion para escribir que se haconectado a arduino
       };
     })
     .then(response =>{

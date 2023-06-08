@@ -1,5 +1,5 @@
 <?php
-include 'conexion_db.php';
+include '../conexion_db.php';
 
 $nombre_dispotivo = "arduino";
 $led_estatus = "ON";
