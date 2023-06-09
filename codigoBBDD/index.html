@@ -21,13 +21,14 @@
 
     <div class="header">
         <!--Header-->
-    <button id="btnConexion" type="button"> 
-        <img src="./imagenes/iconosFuncion/bton.png" alt="Conexión a Bluetooth">
-    </button>
+        <h1>Blueduino</h1>
+        <button id="btnConexion" type="button"> 
+            <img src="./imagenes/iconosFuncion/bton.png" alt="Conexión a Bluetooth">
+        </button>
 
-    <button id="btnDesconexion" type="button">
-        <img src="./imagenes/iconosFuncion/off.png" alt="Descoxión a Bluetooth">
-    </button>
+        <button id="btnDesconexion" type="button">
+            <img src="./imagenes/iconosFuncion/off.png" alt="Descoxión a Bluetooth">
+        </button>
     </div>
 
 <!--Fin header-->
@@ -35,15 +36,15 @@
 
         <div id="terminal">
             <div>Dispositivo en conexión...</div>
-            <div class="saliente">Mensaje/s salientes</div>
-            <div class="entrante">Mensaje/s entrantes</div>
+            <div class="saliente">Los mensaje/s salientes apareceran en rojo</div>
+            <div class="entrante">Los mensaje/s salientes apareceran en azul</div>
         </div>
     </div>
 
     <div class="inferior">
 
         <form id="formulario">
-            <input id="comandos" type="text">
+            <input id="comandos" type="text" placeholder="Escriba aquí sus comandos">
             <button type="submit">Enviar</button>
         </form>
     </div>
